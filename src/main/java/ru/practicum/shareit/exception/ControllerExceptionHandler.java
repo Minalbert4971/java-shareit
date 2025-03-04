@@ -2,64 +2,48 @@ package ru.practicum.shareit.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.HashMap;
-import java.util.Map;
-
 
 @Slf4j
 @RestControllerAdvice
 public class ControllerExceptionHandler {
-    private static final String ERROR = "error";
 
-    private static final String MESSAGE = "message";
-
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleNotFoundException(NotFoundException ex) {
+    @ExceptionHandler({NotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleNotFoundException(NotFoundException ex) {
         log.debug("Not found error: {}", ex.getMessage());
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put(ERROR, "Not Found");
-        errorResponse.put(MESSAGE, ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return new ErrorResponse("ERROR", "Not found");
     }
 
     @ExceptionHandler({ValidationException.class})
-    public ResponseEntity<Map<String, String>> handleValidationException(ValidationException ex) {
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleValidationException(ValidationException ex) {
         log.debug("Validation error: {}", ex.getMessage());
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put(ERROR, "Validation doesn't pass");
-        errorResponse.put(MESSAGE, ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        return new ErrorResponse("ERROR", "Validation doesn't pass");
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, WrongRequirementsException.class})
-    public ResponseEntity<Map<String, String>> handleArgumentException(RuntimeException ex) {
-        log.debug("Validation error: {}", ex.getMessage());
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put(ERROR, "Wrong argument(s)");
-        errorResponse.put(MESSAGE, ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleArgumentException(MethodArgumentNotValidException ex) {
+        log.debug("Argument(s) validation error: {}", ex.getMessage());
+        return new ErrorResponse("ERROR", "Wrong argument(s)");
     }
 
     @ExceptionHandler({AuthentificationException.class})
-    public ResponseEntity<Map<String, String>> handleArgumentException(AuthentificationException ex) {
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleArgumentException(AuthentificationException ex) {
         log.debug("Authentification error: {}", ex.getMessage());
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put(ERROR, "Authentification error");
-        errorResponse.put(MESSAGE, ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+        return new ErrorResponse("ERROR", "Authentification error");
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, String>> handleGeneralException(Exception ex) {
+    @ExceptionHandler({Exception.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleGeneralException(Exception ex) {
         log.debug("Unexpected error: {}", ex.getMessage());
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put(ERROR, "Unexpected error");
-        errorResponse.put(MESSAGE, ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ErrorResponse("ERROR", "Unexpected error");
     }
+
 }
