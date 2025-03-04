@@ -1,51 +1,54 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.booking.model;
 
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 
 @Getter
 @Setter
 @Entity
-@Table(name = "items", schema = "public")
+@Table(name = "bookings", schema = "public")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Item {
+public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @Column(name = "start_date")
+    private LocalDateTime start;
 
-    private String description;
-
-    private Boolean available;
+    @Column(name = "end_date")
+    private LocalDateTime end;
 
     @ManyToOne
-    @JoinColumn(name = "owner")
-    private User owner;
+    @JoinColumn(name = "item")
+    private Item item;
 
-    private Long request;
+    @ManyToOne
+    @JoinColumn(name = "booker")
+    private User booker;
 
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    private BookingStatus status;
 
 }
