@@ -1,27 +1,35 @@
 package ru.practicum.shareit.booking.dto;
 
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Builder
 public class BookingDto {
 
-    private Long id;
+    @NotNull
+    private Integer id;
 
-    private LocalDateTime start;
+    @NotNull
+    private Integer item;
 
-    private LocalDateTime end;
+    @NotNull
+    private Integer booker;
 
-    private Item item;
+    @NotNull
+    @Future
+    private LocalDate start;
 
-    private User booker;
+    @NotNull
+    @Future
+    private LocalDate end;
 
+    @NotNull
     private BookingStatus status;
 
 }
