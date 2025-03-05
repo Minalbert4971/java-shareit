@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ItemRequestController {
 
     private final ItemRequestMapper requestMapper;
+
     private final ItemRequestService service;
 
 }
