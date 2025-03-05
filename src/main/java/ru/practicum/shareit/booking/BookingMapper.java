@@ -29,17 +29,6 @@ public class BookingMapper {
                 .build();
     }
 
-//    Booking map(UpdateBookingDto dto, Long bookingId) {
-//        return Booking.builder()
-//                .id(bookingId)
-//                .start(dto.getStart())
-//                .end(dto.getEnd())
-//                .item(dto.getItem())
-//                .booker(dto.getBooker())
-//                .status(BookingStatus.WAITING)
-//                .build();
-//    }
-
     BookingDto map(Booking booking) {
         return BookingDto.builder()
                 .id(booking.getId())
